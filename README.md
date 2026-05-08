@@ -9,7 +9,7 @@ This application is being built as a learning project to practice Python GUI dev
 ## Current Features
 
 - Create and view Projects
-- Place these Projects in either an Active status, or a Hold status
+- Place these Projects in either an Active or Hold status
 - Select a Project to view details
 - Delete Projects with confirmation
 
