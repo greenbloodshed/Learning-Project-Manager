@@ -19,7 +19,7 @@ This application is being built as a learning project to practice Python GUI dev
 - Right-Click dialog
 - JSON save/load persistence
 - Project editing
-- Tracking time spent on Projects
+- Time tracking on Projects
 - Pomodoro timer
 - Better project detail view
 - Improved layout and stying
