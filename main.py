@@ -1,16 +1,13 @@
 #=============================================================================================================
 # Import Modules
 #=============================================================================================================
-
 import tkinter as tk
 import datetime
 from modules.project import Project
 
-
 #=============================================================================================================
 # Define Functions
 #=============================================================================================================
-
 def main():
     root = tk.Tk()
     app = StuddyBuddyApp(root)
@@ -19,7 +16,6 @@ def main():
 #=============================================================================================================
 # Studdy Buddy - Long Term Productivity/Learning Tool
 #=============================================================================================================
-
 class StuddyBuddyApp:
     """
     Docstring for StuddyBuddyApp
@@ -51,13 +47,13 @@ class StuddyBuddyApp:
         # If Project is Active, the move_mode value will be 'to_hold', else 'to_active'
         self.move_mode = {"value": None}
 
-        self.active_previous_selected = None
-        self.hold_previous_selected = None
-
         # Initialize Bottom Label Details
         self.bottom_label_text = tk.StringVar()
         self.bottom_label_text.set("Select a Project to see details here.")
 
+        #====================================
+        # Frames and Listboxes
+        #====================================
         # Header Frame
         self.header_frame = tk.Frame(
             self.root,
@@ -142,16 +138,15 @@ class StuddyBuddyApp:
         )
         self.bottom_info_label.pack(side="left")
 
+        #====================================
         # Bindings
+        #====================================
         self.active_list_box.bind("<<ListboxSelect>>", self.on_select_event)
         self.hold_list_box.bind("<<ListboxSelect>>", self.on_select_event)
-
-        # Test:    self.root.bind("<ButtonPress-1>", self.deselect_item)
 
         #====================================
         # Buttons
         #====================================
-
         # Delete Project Button
         self.delete_project_button = tk.Button(
             self.bottom_frame,
@@ -168,7 +163,6 @@ class StuddyBuddyApp:
             state="disabled",
             command=self.move_selected
         )
-        #self.move_button.grid(row=0, column=0)
         self.move_button.pack(side="right", pady=(0, 0))
 
         # New Project Button
@@ -177,38 +171,12 @@ class StuddyBuddyApp:
             text="New Project",
             command=self.open_new_project_dialog
         )
-        #self.new_project_button.grid(row=1, column=0)
         self.new_project_button.pack(side="right", pady=(0, 0))
-
-        #self.bottom_info_label.grid(row=0, column=0)
-        
-
-        '''# TEST Projects
-        self.debug_seed_projects = False
-        if self.debug_seed_projects:    
-            self.active_projects.extend([
-                Project("Learn Tkinter"),
-                Project("Build Project Tracker UI"),
-            ])'''
 
         #====================================
         # Refresh UI
         #====================================
         self.refresh_listboxes()
-
-
-    # Test:    def deselect_item(self, event):
-        #if self.active_list_box.curselection() == self.active_previous_selected:
-        #    self.active_list_box.selection_clear(0, tk.END)
-        #    self.new_project_button.config(state="active")
-        
-        #if self.hold_list_box.curselection() == self.hold_previous_selected:
-        #    self.hold_list_box.selection_clear(0, tk.END)
-        #    self.new_project_button.config(state="active")
-
-        #self.active_previous_selected = self.active_list_box.curselection()
-        #self.hold_previous_selected = self.hold_list_box.curselection()
-
 
 
     def open_new_project_dialog(self):
@@ -352,9 +320,12 @@ class StuddyBuddyApp:
 
     def refresh_listboxes(self):
         """ This method Clears both Listboxes and refills them from the lists of Project Class Instances"""
+
+        # Clear Listboxes
         self.active_list_box.delete(0, tk.END)
         self.hold_list_box.delete(0, tk.END)
 
+        # Rebuild the listboxes from the Project lists
         for p in self.active_projects:
             self.active_list_box.insert(tk.END, p.title)
         
@@ -437,8 +408,6 @@ class StuddyBuddyApp:
         self.selected_active_idx["value"] = None
         self.selected_hold_idx["value"] = None
         self.move_mode["value"] = None
-
-
 
 
 # Import check and open main window
