@@ -52,6 +52,27 @@ class StuddyBuddyApp:
         self.bottom_label_text.set("Select a Project to see details here.")
 
         #====================================
+        # Menu Bar
+        #====================================
+        # Create the menu bar
+        menu_bar = tk.Menu(self.root)
+
+        # Create the File menu
+        file_menu = tk.Menu(menu_bar, tearoff=0)
+        file_menu.add_command(label="New Project", command=self.open_new_project_dialog)
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=root.quit)
+        menu_bar.add_cascade(label="File", menu=file_menu)
+
+        # Create the Help menu
+        help_menu = tk.Menu(menu_bar, tearoff=0)
+        help_menu.add_command(label="About")
+        menu_bar.add_cascade(label="Help", menu=help_menu)
+
+        # Display menu bar
+        self.root.config(menu=menu_bar)
+
+        #====================================
         # Frames and Listboxes
         #====================================
         # Header Frame
@@ -64,6 +85,7 @@ class StuddyBuddyApp:
         )
         self.header_frame.pack(side='top', fill='x')
 
+        # Header Frame - Date/Time label
         today_str = datetime.date.today().strftime("%A, %B %d, %Y")
         self.header_label = tk.Label(
             self.header_frame,
