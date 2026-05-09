@@ -8,19 +8,22 @@ This application is being built as a learning project to practice Python GUI dev
 
 ## Current Features
 
-- Create and View Projects
-- Place these Projects in either an Active status, or a Hold status
+- Create and view Projects
+- Place these Projects in either an Active or Hold status
 - Select a Project to view details
 - Delete Projects with confirmation
 
 ## Planned Features
 
-- Menu bar/Right-Click dialog
+- Menu bar
+- Right-Click dialog
 - JSON save/load persistence
 - Project editing
-- Tracking time spent on Projects
+- Time tracking on Projects
+- Pomodoro timer
 - Better project detail view
 - Improved layout and stying
+- Project specific checklists and notepad
 
 ## Project Structure
 
@@ -31,7 +34,8 @@ modules/
 
 ## How to Run
 
-From the project root:
+With Python installed, from the project root run:
+
 python main.py
 
 ## Notes
