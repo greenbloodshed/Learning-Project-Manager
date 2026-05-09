@@ -3,10 +3,11 @@
 #=============================================================================================================
 import tkinter as tk
 import datetime
+import webbrowser
 from modules.project import Project
 
 #=============================================================================================================
-# Define Functions
+# Main Function // Start Program
 #=============================================================================================================
 def main():
     root = tk.Tk()
@@ -60,13 +61,16 @@ class StuddyBuddyApp:
         # Create the File menu
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="New Project", command=self.open_new_project_dialog)
+        file_menu.add_command(label="Preferences")
+        file_menu.add_command(label="Settings")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=root.quit)
         menu_bar.add_cascade(label="File", menu=file_menu)
 
         # Create the Help menu
         help_menu = tk.Menu(menu_bar, tearoff=0)
-        help_menu.add_command(label="About")
+        help_menu.add_command(label="Report a Bug", command=self.open_github_repo_issues)
+        help_menu.add_command(label="About", command=self.open_github_repo)
         menu_bar.add_cascade(label="Help", menu=help_menu)
 
         # Display menu bar
@@ -200,6 +204,9 @@ class StuddyBuddyApp:
         #====================================
         self.refresh_listboxes()
 
+    #=============================================================================================================
+    # Methods
+    #=============================================================================================================
 
     def open_new_project_dialog(self):
         # Create modal window
@@ -431,6 +438,21 @@ class StuddyBuddyApp:
         self.selected_hold_idx["value"] = None
         self.move_mode["value"] = None
 
+
+    def open_github_repo(self):
+        '''opens system default browser to the github repo for this app'''
+
+        github_repo_url = "https://github.com/greenbloodshed/Learning-Project-Manager"
+
+        webbrowser.open(github_repo_url, new=0, autoraise=True)
+
+
+    def open_github_repo_issues(self):
+        ''' opens issues page of the github repo '''
+
+        github_repo_issues_url = "https://github.com/greenbloodshed/Learning-Project-Manager/issues"
+
+        webbrowser.open(github_repo_issues_url, new=0, autoraise=True)
 
 # Import check and open main window
 if __name__ == "__main__":
