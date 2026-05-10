@@ -18,9 +18,6 @@ def main():
 # Studdy Buddy - Long Term Productivity/Learning Tool
 #=============================================================================================================
 class StuddyBuddyApp:
-    """
-    Docstring for StuddyBuddyApp
-    """
     def __init__(self, root):
 
         #=============================================================================================================
@@ -61,16 +58,17 @@ class StuddyBuddyApp:
         # Create the File menu
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="New Project", command=self.open_new_project_dialog)
-        file_menu.add_command(label="Preferences")
-        file_menu.add_command(label="Settings")
+        file_menu.add_command(label="Preferences", state="disabled")
+        file_menu.add_command(label="Settings", state="disabled")
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=root.quit)
+        file_menu.add_command(label="Exit", command=self.root.destroy)
         menu_bar.add_cascade(label="File", menu=file_menu)
 
         # Create the Help menu
         help_menu = tk.Menu(menu_bar, tearoff=0)
         help_menu.add_command(label="Report a Bug", command=self.open_github_repo_issues)
-        help_menu.add_command(label="About", command=self.open_github_repo)
+        help_menu.add_command(label="View GitHub Repo", command=self.open_github_repo)
+        help_menu.add_command(label="About", state="disabled")
         menu_bar.add_cascade(label="Help", menu=help_menu)
 
         # Display menu bar
@@ -120,7 +118,7 @@ class StuddyBuddyApp:
         self.active_label.pack(anchor='w')
 
         # Create Active Listbox
-        self.active_list_box = tk.Listbox(self.active_frame)
+        self.active_list_box = tk.Listbox(self.active_frame, exportselection=False)
         self.active_list_box.pack(fill="both", expand=True, pady=(4, 4))
 
         # Middle Frame -> Right Panel: Projects on Hold
@@ -141,7 +139,7 @@ class StuddyBuddyApp:
         self.hold_label.pack(anchor="w")
 
         # Create Hold Listbox
-        self.hold_list_box = tk.Listbox(self.hold_frame)
+        self.hold_list_box = tk.Listbox(self.hold_frame, exportselection=False)
         self.hold_list_box.pack(fill="both", expand=True, pady=(4, 4))
 
         # Bottom Frame
@@ -235,7 +233,7 @@ class StuddyBuddyApp:
         def close():
             dialog.grab_release()
             dialog.destroy()
-
+        
 
         def create_project():
             # Get title from user in title input box
@@ -270,6 +268,10 @@ class StuddyBuddyApp:
             self.on_select_event(None)
 
             close()
+
+
+        # Close window button handling
+        dialog.protocol("WM_DELETE_WINDOW", close)
 
         # Buttons row
         btn_row = tk.Frame(container)
@@ -336,6 +338,10 @@ class StuddyBuddyApp:
 
             close()
 
+
+        # Close window button handling
+        dialog.protocol("WM_DELETE_WINDOW", close)
+
         # Buttons
         btn_row = tk.Frame(container)
         btn_row.pack(fill="x", pady=(10, 0))
@@ -364,9 +370,16 @@ class StuddyBuddyApp:
 
     def on_select_event(self, event):
         """
-        This method gets details about a specifc Project when selected, sets those details in bottom_label_text,
+        This method gets details about a specific Project when selected, sets those details in bottom_label_text,
         and activates button the Move and Delete buttons.
         """
+        # Clear the opposite listbox selection
+        if event is not None:
+            if event.widget == self.active_list_box:
+                self.hold_list_box.selection_clear(0, tk.END)
+            elif event.widget == self.hold_list_box:
+                self.active_list_box.selection_clear(0, tk.END)
+        
         # Get the Listbox idx for the currently selected item (Returns a Tuple w/ idx)
         selection_active = self.active_list_box.curselection()
         selection_hold = self.hold_list_box.curselection()
@@ -431,7 +444,7 @@ class StuddyBuddyApp:
         # Refresh Listboxes
         self.refresh_listboxes()
         self.move_button.config(state="disabled")              # Disable move button
-        self.delete_project_button.config(state="disabled")    # Disable Delete button
+        self.delete_project_button.config(state="disabled", text="Delete Project")    # Disable Delete button
 
         # Reset State Holders
         self.selected_active_idx["value"] = None
