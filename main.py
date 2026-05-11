@@ -77,7 +77,7 @@ class StuddyBuddyApp:
         #====================================
         # Frames and Listboxes
         #====================================
-        # Header Frame
+        # --- Header Frame ---
         self.header_frame = tk.Frame(
             self.root,
             borderwidth=1,
@@ -96,7 +96,7 @@ class StuddyBuddyApp:
         )
         self.header_label.pack(anchor="e")
         
-        # Middle Frame
+        # --- Middle Frame ---
         self.middle_frame = tk.Frame(self.root)
         self.middle_frame.pack(side="top", fill="both", expand=True)
 
@@ -142,7 +142,7 @@ class StuddyBuddyApp:
         self.hold_list_box = tk.Listbox(self.hold_frame, exportselection=False)
         self.hold_list_box.pack(fill="both", expand=True, pady=(4, 4))
 
-        # Bottom Frame
+        # --- Bottom Frames ---
         self.bottom_frame = tk.Frame(
             self.root,
             borderwidth=1,
@@ -154,13 +154,23 @@ class StuddyBuddyApp:
         self.bottom_frame.pack(side="bottom", fill="x")
         self.bottom_frame.pack_propagate(False)
 
-        # Set Bottom Label Details in Bottom Frame
+        self.bottom_frame.columnconfigure(0, weight=1)
+        self.bottom_frame.rowconfigure(0, weight=1)
+
+        self.bottom_left_frame = tk.Frame(self.bottom_frame)
+        self.bottom_left_frame.grid(row=0, column=0, sticky="news")
+
+        self.bottom_right_frame = tk.Frame(self.bottom_frame)
+        self.bottom_right_frame.grid(row=0, column=1, sticky="swe")
+
+        # Set Bottom Label Details in Bottom Left Frame
         self.bottom_info_label = tk.Label(
-            self.bottom_frame,
+            self.bottom_left_frame,
             textvariable=self.bottom_label_text,
-            font=("Arial", 9, "italic")
+            font=("Arial", 9, "italic", "bold"),
+            justify=tk.LEFT
         )
-        self.bottom_info_label.pack(side="left")
+        self.bottom_info_label.pack(anchor="nw", expand=True)
 
         #====================================
         # Bindings
@@ -171,31 +181,32 @@ class StuddyBuddyApp:
         #====================================
         # Buttons
         #====================================
+        # New Project Button
+        self.new_project_button = tk.Button(
+            self.bottom_right_frame,
+            text="New Project",
+            command=self.open_new_project_dialog
+        )
+        self.new_project_button.pack(anchor="e")
+
         # Delete Project Button
         self.delete_project_button = tk.Button(
-            self.bottom_frame,
+            self.bottom_right_frame,
             text="Delete Project",
+            fg="red",
             state="disabled",
             command=self.open_delete_project_dialog
         )
-        self.delete_project_button.pack(side="right", pady=(0, 0))
+        self.delete_project_button.pack(anchor="e")
 
         # Move Project Button
         self.move_button = tk.Button(
-            self.bottom_frame,
+            self.bottom_right_frame,
             text="Move to Projects on Hold",
             state="disabled",
             command=self.move_selected
         )
-        self.move_button.pack(side="right", pady=(0, 0))
-
-        # New Project Button
-        self.new_project_button = tk.Button(
-            self.bottom_frame,
-            text="New Project",
-            command=self.open_new_project_dialog
-        )
-        self.new_project_button.pack(side="right", pady=(0, 0))
+        self.move_button.pack(anchor="e")
 
         #====================================
         # Refresh UI
@@ -418,7 +429,7 @@ class StuddyBuddyApp:
 
         # Show project details in bottom label
         self.bottom_label_text.set(
-            f"Title: {project.title}\nCreated on: {project.creation_date}\nLast opened: {project.last_opened}"
+            f"Project Selected: {project.title}\nCreated on: {project.creation_date}\nLast opened: {project.last_opened}"
         )
 
 
