@@ -177,6 +177,9 @@ class StuddyBuddyApp:
         #====================================
         self.active_list_box.bind("<<ListboxSelect>>", self.on_select_event)
         self.hold_list_box.bind("<<ListboxSelect>>", self.on_select_event)
+        
+        # Testing
+        self.active_list_box.bind("<Double-Button-1>", self.open_project)
 
         #====================================
         # Buttons
@@ -216,6 +219,31 @@ class StuddyBuddyApp:
     #=============================================================================================================
     # Methods
     #=============================================================================================================
+
+    def get_active_project(self):
+
+        # Get index for currently selected element(project title) in the active listbox which is mapped to the index of the Project Class Instance
+        idx = self.selected_active_idx["value"]
+
+        # Get selected Project's Class Instance
+        project_class_instance = self.active_projects[idx]
+
+        # If nothing selected
+        if idx is None:
+            return
+        # Return Project Class Instance
+        else:
+            return project_class_instance
+        
+
+    def open_project(self, event):
+        # Get Active Project
+        project = self.get_active_project()
+
+        project_window = tk.Toplevel(self.root)
+        project_window.title(project.title)
+        project_window.geometry("800x600")
+
 
     def open_new_project_dialog(self):
         # Create modal window
@@ -299,12 +327,13 @@ class StuddyBuddyApp:
     def open_delete_project_dialog(self):
         """ This method opens a dialog for project deletion. """
 
-        # Get currently selected Project class instance
+        # Get index for currently selected element(project title) in the active listbox
         idx = self.selected_active_idx["value"]
 
         if idx is None:
             return
         
+        # Get selected Project's Class Instance
         project_class_instance = self.active_projects[idx]
 
         # Create modal window
