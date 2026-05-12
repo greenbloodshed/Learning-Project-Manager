@@ -5,6 +5,7 @@ import tkinter as tk
 import datetime
 import webbrowser
 from modules.project import Project
+from modules.basewindow import BaseWindow
 
 #=============================================================================================================
 # Main Function // Start Program
@@ -221,7 +222,10 @@ class StuddyBuddyApp:
     #=============================================================================================================
 
     def get_active_project(self):
-
+        ''' Returns a tuple containing [0]The currently selected project(instance), and [1]the idx of the project in the project instance list and the listbox.
+            If you only want the project, and not the idx, or vice versa, call using '_'. 
+            e.g.: project, _ = self.get_active_project().
+            Otherwise, the entire tuple will be retuned. In other words, you must unpack the tuple if you want the values inside assigned to seperate variables.'''
         # Get index for currently selected element(project title) in the active listbox which is mapped to the index of the Project Class Instance
         idx = self.selected_active_idx["value"]
 
@@ -231,18 +235,22 @@ class StuddyBuddyApp:
         # If nothing selected
         if idx is None:
             return
-        # Return Project Class Instance
+        # Return Project Class Instance and its idx
         else:
-            return project_class_instance
+            return project_class_instance, idx
         
 
     def open_project(self, event):
         # Get Active Project
-        project = self.get_active_project()
+        project, _ = self.get_active_project()
 
+        # Creare new window for the Project
         project_window = tk.Toplevel(self.root)
         project_window.title(project.title)
         project_window.geometry("800x600")
+
+        # TODO: Instantiate 'Base Window'
+        # BaseWindow(project_window).pack()
 
 
     def open_new_project_dialog(self):
@@ -325,16 +333,10 @@ class StuddyBuddyApp:
 
 
     def open_delete_project_dialog(self):
-        """ This method opens a dialog for project deletion. """
+        """ This method opens a confirmation dialog for project deletion. """
 
-        # Get index for currently selected element(project title) in the active listbox
-        idx = self.selected_active_idx["value"]
-
-        if idx is None:
-            return
-        
-        # Get selected Project's Class Instance
-        project_class_instance = self.active_projects[idx]
+        # Get project and its index
+        project, idx = self.get_active_project()
 
         # Create modal window
         dialog = tk.Toplevel(self.root)
@@ -350,7 +352,7 @@ class StuddyBuddyApp:
         tk.Label(
             container,
             text=(
-                f"Are you sure you want to delete Project: '{project_class_instance.title}' ?\n\n"
+                f"Are you sure you want to delete Project: '{project.title}' ?\n\n"
                 "WARNING: This action cannot be undone!!!"
             )
         ).pack(anchor="w")
