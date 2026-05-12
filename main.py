@@ -250,7 +250,7 @@ class StuddyBuddyApp:
         project_window.geometry("800x600")
 
         # TODO: Instantiate 'Base Window'
-        # BaseWindow(project_window).pack()
+        project_window = BaseWindow(project_window, self).pack()
 
 
     def open_new_project_dialog(self):
