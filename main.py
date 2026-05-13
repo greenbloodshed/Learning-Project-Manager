@@ -7,6 +7,12 @@ import webbrowser
 from modules.project import Project
 
 #=============================================================================================================
+# Constants
+#=============================================================================================================
+GITHUB_REPO_URL = "https://github.com/greenbloodshed/Learning-Project-Manager"
+GITHUB_ISSUES_URL = "https://github.com/greenbloodshed/Learning-Project-Manager/issues"
+
+#=============================================================================================================
 # Main Function // Start Program
 #=============================================================================================================
 def main():
@@ -61,7 +67,7 @@ class StuddyBuddyApp:
         file_menu.add_command(label="Preferences", state="disabled")
         file_menu.add_command(label="Settings", state="disabled")
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.root.destroy)
+        file_menu.add_command(label="Exit", command=self.exit_app)
         menu_bar.add_cascade(label="File", menu=file_menu)
 
         # Create the Help menu
@@ -381,8 +387,8 @@ class StuddyBuddyApp:
 
     def on_select_event(self, event):
         """
-        This method gets details about a specific Project when selected, sets those details in bottom_label_text,
-        and activates button the Move and Delete buttons.
+        Gets details about the selected Project, updates bottom_label_text,
+        and activates the Move and Delete buttons as appropriate.
         """
         # Clear the opposite listbox selection
         if event is not None:
@@ -464,19 +470,21 @@ class StuddyBuddyApp:
 
 
     def open_github_repo(self):
-        '''opens system default browser to the github repo for this app'''
+        '''Opens system default browser to the github repo for this app'''
 
-        github_repo_url = "https://github.com/greenbloodshed/Learning-Project-Manager"
-
-        webbrowser.open(github_repo_url, new=0, autoraise=True)
+        webbrowser.open(GITHUB_REPO_URL, new=0, autoraise=True)
 
 
     def open_github_repo_issues(self):
-        ''' opens issues page of the github repo '''
+        '''Opens issues page of the github repo.'''
 
-        github_repo_issues_url = "https://github.com/greenbloodshed/Learning-Project-Manager/issues"
+        webbrowser.open(GITHUB_ISSUES_URL, new=0, autoraise=True)
 
-        webbrowser.open(github_repo_issues_url, new=0, autoraise=True)
+
+    def exit_app(self):
+        """Close the application."""
+        self.root.destroy()
+
 
 # Import check and open main window
 if __name__ == "__main__":
