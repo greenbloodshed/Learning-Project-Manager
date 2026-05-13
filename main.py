@@ -5,7 +5,7 @@ import tkinter as tk
 import datetime
 import webbrowser
 from modules.project import Project
-from modules.basewindow import BaseWindow
+from modules.projectwindow import ProjectWindow
 
 #=============================================================================================================
 # Main Function // Start Program
@@ -229,28 +229,25 @@ class StuddyBuddyApp:
         # Get index for currently selected element(project title) in the active listbox which is mapped to the index of the Project Class Instance
         idx = self.selected_active_idx["value"]
 
-        # Get selected Project's Class Instance
-        project_class_instance = self.active_projects[idx]
-
         # If nothing selected
         if idx is None:
-            return
+            return None
+        
         # Return Project Class Instance and its idx
-        else:
-            return project_class_instance, idx
+        return self.active_projects[idx], idx
         
 
     def open_project(self, event):
         # Get Active Project
-        project, _ = self.get_active_project()
+        result = self.get_active_project()
 
-        # Creare new window for the Project
-        project_window = tk.Toplevel(self.root)
-        project_window.title(project.title)
-        project_window.geometry("800x600")
+        if result is None:
+            return
+        
+        # Unpack
+        project, _ = result
 
-        # TODO: Instantiate 'Base Window'
-        project_window = BaseWindow(project_window, self).pack()
+        ProjectWindow(self.root, self, project)
 
 
     def open_new_project_dialog(self):
