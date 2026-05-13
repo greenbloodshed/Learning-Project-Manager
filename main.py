@@ -55,6 +55,10 @@ class StuddyBuddyApp:
         self.bottom_label_text = tk.StringVar()
         self.bottom_label_text.set("Select a Project to see details here.")
 
+        # Initialize Welcome Message
+        self.welcome_msg = tk.StringVar()
+        self.welcome_msg.set("Welcome!")
+
         #====================================
         # Menu Bar
         #====================================
@@ -64,7 +68,7 @@ class StuddyBuddyApp:
         # Create the File menu
         file_menu = tk.Menu(menu_bar, tearoff=0)
         file_menu.add_command(label="New Project", command=self.open_new_project_dialog)
-        file_menu.add_command(label="Preferences", state="disabled")
+        file_menu.add_command(label="Preferences", command=self.open_preferences)
         file_menu.add_command(label="Settings", state="disabled")
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.exit_app)
@@ -93,14 +97,31 @@ class StuddyBuddyApp:
         )
         self.header_frame.pack(side='top', fill='x')
 
+        self.header_frame.columnconfigure(0, weight=1)
+        self.header_frame.rowconfigure(0, weight=1)
+
+        self.header_left_frame = tk.Frame(self.header_frame)
+        self.header_left_frame.grid(row=0, column=0, sticky="news")
+
+        self.header_right_frame = tk.Frame(self.header_frame)
+        self.header_right_frame.grid(row=0, column=1, sticky="swe")
+
         # Header Frame - Date/Time label
         today_str = datetime.date.today().strftime("%A, %B %d, %Y")
         self.header_label = tk.Label(
-            self.header_frame,
+            self.header_right_frame,
             text=f"Today's Date:    {today_str}",
             font=("Arial", 10)
         )
         self.header_label.pack(anchor="e")
+
+        # Header Frame Welcome Message
+        self.header_label_welcome_msg = tk.Label(
+            self.header_left_frame,
+            textvariable=self.welcome_msg,
+            font=("Arial", 12)
+        )
+        self.header_label_welcome_msg.pack(anchor="w")
         
         # --- Middle Frame ---
         self.middle_frame = tk.Frame(self.root)
@@ -479,6 +500,53 @@ class StuddyBuddyApp:
         '''Opens issues page of the github repo.'''
 
         webbrowser.open(GITHUB_ISSUES_URL, new=0, autoraise=True)
+
+
+    def open_preferences(self):
+        """Opens the Preferences Window"""
+        # Create modal window
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Configure Preferences")
+        dialog.resizable(False, False)
+        dialog.geometry("600x400")
+        dialog.transient(self.root)    # keep above main window
+        dialog.grab_set()              # make it modal (force user to interact w/ the dialog before anything else)
+
+        # Layout
+        container = tk.Frame(dialog, padx=10, pady=10)
+        container.pack(fill="both", expand=True)
+
+        tk.Label(container, text="Customize the Welcome Message:").pack(anchor="w")
+
+        welcome_msg_entry = tk.Entry(container, textvariable=self.welcome_msg, width=60)
+        welcome_msg_entry.pack(fill="x", pady=(4, 10))
+        welcome_msg_entry.focus_set()
+
+        def close():
+            dialog.grab_release()
+            dialog.destroy()
+
+        # Close window button handling
+        dialog.protocol("WM_DELETE_WINDOW", close)
+
+        bottom_frame = tk.Frame(
+            dialog,
+            borderwidth=1,
+            relief="solid",
+            padx=8,
+            pady=4
+        )
+        bottom_frame.pack(side="bottom", fill="x")
+
+        # Close Button
+        close_button = tk.Button(
+            bottom_frame,
+            text="Close",
+            command=close
+        )
+        close_button.pack(anchor="e")
+
+        
 
 
     def exit_app(self):
