@@ -122,7 +122,7 @@ class StuddyBuddyApp:
         self.header_label_welcome_msg = tk.Label(
             self.header_left_frame,
             textvariable=self.welcome_msg,
-            font=("Arial", 12)
+            font=("Arial", 10)
         )
         self.header_label_welcome_msg.pack(anchor="w")
         
