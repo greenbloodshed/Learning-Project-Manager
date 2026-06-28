@@ -46,7 +46,7 @@ class ProjectWindow(tk.Toplevel):
         self.title_label = tk.Label(
             header_frame,
             text=f"Project: {self.project.title}",
-            font=("Arial", 12, "bold")
+            font=("Arial", 10, "bold")
         )
         self.title_label.pack(side="left")
 
@@ -75,9 +75,13 @@ class ProjectWindow(tk.Toplevel):
 
         description_box.pack(side="top", fill="x")
 
+        # --- Middle Frame ---
+        self.middle_frame = tk.Frame(body_frame)
+        self.middle_frame.pack(side="top", fill="both", expand=True)
+
         # Middle Frame -> Left Panel: Goals
         self.goals_frame = tk.Frame(
-            body_frame,
+            self.middle_frame,
             borderwidth=1,
             relief="solid",
             padx=8,
@@ -92,9 +96,13 @@ class ProjectWindow(tk.Toplevel):
         )
         goals_label.pack(anchor='w')
 
+        # Create Goal Listbox
+        self.goals_list_box = tk.Listbox(self.goals_frame, exportselection=False)
+        self.goals_list_box.pack(fill="both", expand=True, pady=(4, 4))
+
         # Middle Frame -> Right Panel: Step Tracker
         self.step_tracker_frame = tk.Frame(
-            body_frame,
+            self.middle_frame,
             borderwidth=1,
             relief="solid",
             padx=8,
@@ -108,6 +116,10 @@ class ProjectWindow(tk.Toplevel):
             font=("Arial", 10, "bold")
         )
         step_tracker_label.pack(anchor='w')
+
+        # Create Step Tracker Listbox
+        self.step_tracker_list_box = tk.Listbox(self.step_tracker_frame, exportselection=False)
+        self.step_tracker_list_box.pack(fill="both", expand=True, pady=(4, 4))
 
 
     def build_bottom(self):
