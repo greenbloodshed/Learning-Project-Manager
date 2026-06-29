@@ -1,5 +1,6 @@
 import tkinter as tk
 import datetime
+from modules.goal import Goal
 
 
 class ProjectWindow(tk.Toplevel):
@@ -10,10 +11,16 @@ class ProjectWindow(tk.Toplevel):
 
         self.parent = parent
         self.main_app = main_app
+
+        # Project Class Instance
         self.project = project
 
         self.title(project.title)
         self.geometry("800x600")
+
+        # Initialize Goals lists
+        self.project_goals = []
+
 
         self.build_menu()
         self.build_header()
@@ -148,7 +155,7 @@ class ProjectWindow(tk.Toplevel):
         add_goal_button = tk.Button(
             bottom_right_frame,
             text="Add Goal",
-            command=self.add_goal
+            command=self.add_goal_dialog
         )
         add_goal_button.pack(anchor="e")
 
@@ -165,5 +172,92 @@ class ProjectWindow(tk.Toplevel):
         print("Project logs feature to be implemented...")
 
 
-    def add_goal(self):
-        print("Adding goals to be implemented...")
+    def refresh_listboxes(self):
+        """ This method refreshes both listboxes"""
+
+        # Clear Listboxes
+        self.goals_list_box.delete(0, tk.END)
+        self.step_tracker_list_box.delete(0, tk.END)
+
+        # Rebuild the listboxes from the Project lists
+        for g in self.project_goals:
+            self.goals_list_box.insert(tk.END, g.name)
+        
+        # TODO: build step tracker listbox
+
+
+    def add_goal_dialog(self):
+        # Create modal window
+        dialog = tk.Toplevel(self)
+        dialog.title("Add a Goal")
+        dialog.resizable(False, False)
+        dialog.transient(self)         # keep above main window
+        dialog.grab_set()              # make it modal (force user to interact w/ the dialog before anything else)
+
+        # Layout
+        container = tk.Frame(dialog, padx=10, pady=10)
+        container.pack(fill="both", expand=True)
+
+        tk.Label(container, text="Set Goal Name:").pack(anchor="w")
+
+        goal_var = tk.StringVar()
+        goal_entry = tk.Entry(container, textvariable=goal_var, width=60)
+        goal_entry.pack(fill="x", pady=(4, 10))
+        goal_entry.focus_set()
+
+        # Status label for validation errors
+        status_var = tk.StringVar()
+        status_label = tk.Label(container, textvariable=status_var, font=("Arial", 9, "italic"))
+        status_label.pack(anchor="w", pady=(0, 8))
+
+        def close():
+            dialog.grab_release()
+            dialog.destroy()
+
+        def add_goal():
+            # Get goal name from user in 'Set Goal Name' input box
+            goal_name = goal_var.get().strip()
+
+            # Validate Input
+            if not goal_name:
+                status_var.set("Goal name cannot be blank.")
+                return
+            
+            # Prevent Duplicate Titles
+            if goal_name in self.project_goals:
+                status_var.set("A goal with that name already exists.")
+                return
+            
+            # Instantiate new Goal Class Instance & add to self.project_goals
+            self.project_goals.append(Goal(goal_name, self.project))
+
+            # Refresh listboxes
+            self.refresh_listboxes()
+
+            # Auto-select the new project
+            new_idx = len(self.project_goals) - 1
+            self.step_tracker_list_box.selection_clear(0, tk.END)
+            self.goals_list_box.selection_clear(0, tk.END)
+            self.goals_list_box.selection_set(new_idx)
+            self.goals_list_box.activate(new_idx)
+            self.goals_list_box.see(new_idx)
+
+            # Trigger normal selection logic and update bottom panel w/ proj info
+            #TODO: define this: self.on_select_event(None)
+
+            close()
+
+
+        # Close window button handling
+        dialog.protocol("WM_DELETE_WINDOW", close)
+
+        # Buttons row
+        btn_row = tk.Frame(container)
+        btn_row.pack(fill="x")
+
+        tk.Button(btn_row, text="Cancel", command=close).pack(side="right")
+        tk.Button(btn_row, text="Add Goal", command=add_goal).pack(side="right", padx=(0, 6))
+
+        # Keyboard shortcuts
+        dialog.bind("<Return>", lambda event: add_goal())
+        dialog.bind("<Escape>", lambda event: close())

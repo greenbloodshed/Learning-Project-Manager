@@ -1,9 +1,10 @@
 class Goal:
 
-    def __init__(self, title):
+    def __init__(self, name, project):
 
         # set defaults // create instance vars
-        self.title = title
+        self.name = name
+        self.project = project
         self.steps = {
 
         }
