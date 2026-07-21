@@ -5,22 +5,16 @@ from modules.goal import Goal
 
 class ProjectWindow(tk.Toplevel):
     """A seperate window for viewing and editing a single Project."""
-
-    def __init__(self, parent, main_app, project):
+    def __init__(self, parent, project):
         super().__init__(parent)
-
+        
         self.parent = parent
-        self.main_app = main_app
 
         # Project Class Instance
         self.project = project
 
         self.title(project.title)
         self.geometry("800x600")
-
-        # Initialize Goals lists
-        self.project_goals = []
-
 
         self.build_menu()
         self.build_header()
@@ -48,7 +42,7 @@ class ProjectWindow(tk.Toplevel):
         )
         header_frame.pack(side="top", fill="x")
 
-        today_str = datetime.date.today().strftime("%A, %B, %D, %Y")
+        today_str = datetime.date.today().strftime("%A, %B, %d, %Y")
 
         self.title_label = tk.Label(
             header_frame,
@@ -70,7 +64,7 @@ class ProjectWindow(tk.Toplevel):
         body_frame.pack(side="top", fill="both", expand=True)
 
         # Description box
-        description_box = tk.Text(
+        self.description_box = tk.Text(
             body_frame,
             height=2,
             font=("Arial", 10),
@@ -78,9 +72,9 @@ class ProjectWindow(tk.Toplevel):
             pady=4
         )
         # Initial description
-        description_box.insert(tk.END, "Enter a Project description here...")
+        self.description_box.insert(tk.END, self.project.description)
 
-        description_box.pack(side="top", fill="x")
+        self.description_box.pack(side="top", fill="x")
 
         # --- Middle Frame ---
         self.middle_frame = tk.Frame(body_frame)
@@ -180,7 +174,7 @@ class ProjectWindow(tk.Toplevel):
         self.step_tracker_list_box.delete(0, tk.END)
 
         # Rebuild the listboxes from the Project lists
-        for g in self.project_goals:
+        for g in self.project.goals:
             self.goals_list_box.insert(tk.END, g.name)
         
         # TODO: build step tracker listbox
@@ -224,18 +218,21 @@ class ProjectWindow(tk.Toplevel):
                 return
             
             # Prevent Duplicate Titles
-            if goal_name in self.project_goals:
-                status_var.set("A goal with that name already exists.")
+            if any(
+                goal.name.casefold() == goal_name.casefold()
+                for goal in self.project.goals
+            ):
+                status_var.set("A Goal with that name already exists for this Project.")
                 return
             
-            # Instantiate new Goal Class Instance & add to self.project_goals
-            self.project_goals.append(Goal(goal_name, self.project))
+            # Instantiate new Goal Class Instance for the Project
+            self.project.goals.append(Goal(goal_name))
 
             # Refresh listboxes
             self.refresh_listboxes()
 
             # Auto-select the new project
-            new_idx = len(self.project_goals) - 1
+            new_idx = len(self.project.goals) - 1
             self.step_tracker_list_box.selection_clear(0, tk.END)
             self.goals_list_box.selection_clear(0, tk.END)
             self.goals_list_box.selection_set(new_idx)

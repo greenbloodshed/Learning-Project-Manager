@@ -277,7 +277,7 @@ class StuddyBuddyApp:
         # Unpack
         project, _ = result
 
-        ProjectWindow(self.root, self, project)
+        ProjectWindow(self.root, project)
 
 
     def open_new_project_dialog(self):
@@ -362,8 +362,13 @@ class StuddyBuddyApp:
     def open_delete_project_dialog(self):
         """ This method opens a confirmation dialog for project deletion. """
 
-        # Get project and its index
-        project, idx = self.get_active_project()
+        # Get project and its idx
+        result = self.get_active_project()
+
+        if result in None:
+            return
+        
+        project, idx = result
 
         # Create modal window
         dialog = tk.Toplevel(self.root)
@@ -497,14 +502,14 @@ class StuddyBuddyApp:
             idx = self.selected_active_idx["value"]
             project = self.active_projects.pop(idx)    # Remove Project Class Instance from active_projects list and store in var
             self.hold_projects.append(project)         # Put Project Class Instance into hold_projects list
-            project.active = False
+            #TODO: Refactor this to be the authoritative representation; eliminate 2 project lists, and filter them into each listbox ----> project.active = False
             self.bottom_label_text.set(f"Moved to Projects on Hold: {project.title}")
 
         elif self.move_mode["value"] == "to_active":
             idx = self.selected_hold_idx["value"]
             project = self.hold_projects.pop(idx)      # Remove Project Class Instance from hold_projects list and store in var
             self.active_projects.append(project)       # Put Project Class Instance into active_projects list
-            project.active = True
+            #TODO: Refactor this to be the authoritative representation; eliminate 2 project lists, and filter them into each listbox ----> project.active = True
             self.bottom_label_text.set(f"Moved to Active Projects: {project.title}")
 
         else:
