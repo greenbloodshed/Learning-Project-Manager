@@ -365,7 +365,7 @@ class StuddyBuddyApp:
         # Get project and its idx
         result = self.get_active_project()
 
-        if result in None:
+        if result is None:
             return
         
         project, idx = result

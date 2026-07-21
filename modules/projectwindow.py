@@ -7,10 +7,8 @@ class ProjectWindow(tk.Toplevel):
     """A seperate window for viewing and editing a single Project."""
     def __init__(self, parent, project):
         super().__init__(parent)
-        
-        self.parent = parent
 
-        # Project Class Instance
+        self.parent = parent
         self.project = project
 
         self.title(project.title)
@@ -21,12 +19,19 @@ class ProjectWindow(tk.Toplevel):
         self.build_body()
         self.build_bottom()
 
+        self.refresh_listboxes()
+
+        self.protocol("WM_DELETE_WINDOW", self.close_window)
+
 
     def build_menu(self):
         menu_bar = tk.Menu(self)
 
         file_menu = tk.Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="Close", command=self.destroy)
+        file_menu.add_command(
+            label="Close",
+            command=self.close_window
+        )
 
         menu_bar.add_cascade(label="File", menu=file_menu)
         self.config(menu=menu_bar)
@@ -258,3 +263,14 @@ class ProjectWindow(tk.Toplevel):
         # Keyboard shortcuts
         dialog.bind("<Return>", lambda event: add_goal())
         dialog.bind("<Escape>", lambda event: close())
+
+
+    def close_window(self):
+        """Save editable project data and close the Project Window"""
+
+        self.project.description = self.description_box.get(
+            "1.0",    # line 1 char 0
+            "end-1c"    # the end, minues one char (exclude newline char)
+        )
+
+        self.destroy()
