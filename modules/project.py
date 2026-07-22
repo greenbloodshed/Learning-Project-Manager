@@ -8,5 +8,6 @@ class Project:
         self.creation_date = datetime.date.today().strftime("%A, %B %d, %Y")
         self.last_opened = datetime.date.today().strftime("%A, %B %d, %Y")
         self.goals = []
+        self.time = ""
         #TODO: Refactor this to be the authoritative representation; eliminate 2 project lists, and filter them into each listbox ----> self.active = True
         #self.timeSpent = f"You've spent __ hrs, __ minutes, and __ seconds working on {self.title}"
