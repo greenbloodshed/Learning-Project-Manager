@@ -283,6 +283,9 @@ class StuddyBuddyApp:
     def open_new_project_dialog(self):
         # Create modal window
         dialog = tk.Toplevel(self.root)
+        #dialog.wait_visibility()
+        #x, y = self.get_geometry(self.root, dialog)    # get position for child
+        #dialog.geometry(f"+{x}+{y}")
         dialog.title("New Project")
         dialog.resizable(False, False)
         dialog.transient(self.root)    # keep above main window
@@ -581,6 +584,17 @@ class StuddyBuddyApp:
             command=close
         )
         close_button.pack(anchor="e")
+
+
+    '''def get_geometry(self, parent, child):
+        """ Accepts a parent window widget, and a child window widget, and returns coordinates  """
+
+        # get coordinates of parent window
+        x = parent.winfo_x() + parent.winfo_width()//2 - child.winfo_width()//2
+        y = parent.winfo_y() + parent.winfo_height()//2 - child.winfo_height()//2
+
+        # return coords
+        return x, y'''
 
 
     def exit_app(self):
